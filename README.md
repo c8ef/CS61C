@@ -8,7 +8,7 @@
 - [ ] lab03a
 - [ ] lab03b
 - [x] lab04a
-- [ ] lab04b
+- [x] lab04b
 - [ ] lab05a
 - [ ] lab05b
 
