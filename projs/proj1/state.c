@@ -100,8 +100,7 @@ static void set_board_at(game_state_t *state, unsigned int x, unsigned int y,
   Returns false otherwise.
 */
 static bool is_tail(char c) {
-  // TODO: Implement this function.
-  return true;
+  return c == 'w' || c == 'a' || c == 's' || c == 'd';
 }
 
 /*
@@ -110,8 +109,7 @@ static bool is_tail(char c) {
   Returns false otherwise.
 */
 static bool is_head(char c) {
-  // TODO: Implement this function.
-  return true;
+  return c == 'W' || c == 'A' || c == 'S' || c == 'D' || c == 'x';
 }
 
 /*
@@ -119,8 +117,8 @@ static bool is_head(char c) {
   The snake consists of these characters: "wasd^<>vWASDx"
 */
 static bool is_snake(char c) {
-  // TODO: Implement this function.
-  return true;
+  return is_tail(c) || is_head(c) || c == 'v' || c == '>' || c == '<' ||
+         c == '^';
 }
 
 /*
@@ -129,8 +127,17 @@ static bool is_snake(char c) {
   tail ("wasd").
 */
 static char body_to_tail(char c) {
-  // TODO: Implement this function.
-  return '?';
+  switch (c) {
+  case '^':
+    return 'w';
+  case '>':
+    return 'd';
+  case '<':
+    return 'a';
+  case 'v':
+    return 's';
+  }
+  __builtin_unreachable();
 }
 
 /*
@@ -139,8 +146,17 @@ static char body_to_tail(char c) {
   body ("^<>v").
 */
 static char head_to_body(char c) {
-  // TODO: Implement this function.
-  return '?';
+  switch (c) {
+  case 'W':
+    return '^';
+  case 'A':
+    return '<';
+  case 'S':
+    return 'v';
+  case 'D':
+    return '>';
+  }
+  __builtin_unreachable();
 }
 
 /*
@@ -149,7 +165,10 @@ static char head_to_body(char c) {
   Returns cur_x otherwise.
 */
 static unsigned int get_next_x(unsigned int cur_x, char c) {
-  // TODO: Implement this function.
+  if (c == '>' || c == 'd' || c == 'D')
+    return cur_x + 1;
+  if (c == '<' || c == 'a' || c == 'A')
+    return cur_x - 1;
   return cur_x;
 }
 
@@ -159,7 +178,10 @@ static unsigned int get_next_x(unsigned int cur_x, char c) {
   Returns cur_y otherwise.
 */
 static unsigned int get_next_y(unsigned int cur_y, char c) {
-  // TODO: Implement this function.
+  if (c == '^' || c == 'w' || c == 'W')
+    return cur_y - 1;
+  if (c == 'v' || c == 's' || c == 'S')
+    return cur_y + 1;
   return cur_y;
 }
 
@@ -172,8 +194,11 @@ static unsigned int get_next_y(unsigned int cur_y, char c) {
   This function should not modify anything.
 */
 static char next_square(game_state_t *state, unsigned int snum) {
-  // TODO: Implement this function.
-  return '?';
+  char now_char = get_board_at(state, state->snakes[snum].head_x,
+                               state->snakes[snum].head_y);
+  unsigned next_x = get_next_x(state->snakes[snum].head_x, now_char);
+  unsigned next_y = get_next_y(state->snakes[snum].head_y, now_char);
+  return get_board_at(state, next_x, next_y);
 }
 
 /*
