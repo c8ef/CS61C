@@ -1,6 +1,6 @@
 # CS61C
 
-- [ ] lab00
+- [x] lab00
 - [ ] lab01a
 - [ ] lab01b
 - [ ] lab02a
