@@ -4,7 +4,7 @@
 - [x] lab01a
 - [x] lab01b
 - [x] lab02a
-- [ ] lab02b
+- [x] lab02b
 - [ ] lab03a
 - [ ] lab03b
 - [x] lab04a
