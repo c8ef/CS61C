@@ -29,24 +29,6 @@ dot:
   mv s0, a0
   mv s1, a1
 
-  li t0, 0
-  li t1, 0
-ls1:
-  addi t0, t0, 1
-  add t1, t1, a3
-  blt t1, a2, ls1
-
-  li t2, 0
-  li t1, 0
-ls2:
-  addi t2, t2, 1
-  add t1, t1, a3
-  blt t1, a2, ls2
-
-  mv a2, t0
-  blt t2, t0, next
-  mv a2, t2
-next:
   slli a3, a3, 2
   slli a4, a4, 2
   li a0, 0
