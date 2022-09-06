@@ -25,18 +25,108 @@
 #     this function terminates the program with error code 29
 # ==============================================================================
 read_matrix:
+  addi sp, sp, -20
+  sw ra, 0(sp)
+  sw s1, 4(sp)
+  sw s2, 8(sp)
+  sw s3, 12(sp)
+  sw s4, 16(sp)
 
-	# Prologue
+  mv s1, a1
+  mv s2, a2
 
+  li a1, 0
+  call fopen
+  blt a0, x0, Efopen
+  mv s3, a0
 
+  addi sp, sp, -8
+  mv s4, sp
 
+  mv a0, s3
+  mv a1, s4
+  li a2, 4
+  call fread
+  li t1, 4
+  bne t1, a0, Efread
 
+  addi s4, s4, 4
 
+  mv a0, s3
+  mv a1, s4
+  li a2, 4
+  call fread
+  li t1, 4
+  bne t1, a0, Efread
 
+  lw t0, 0(sp)
+  lw t1, 4(sp)
+  addi sp, sp, 8
+  sw t0, 0(s1)
+  sw t1, 0(s2)
+  mv s1, t0
+  mv s2, t1
 
+  mul a0, s1, s2
+  slli a0, a0, 2
+  call malloc
+  beq a0, x0, Emalloc
+  mv s4, a0
 
+  li t0, 0
+  li t1, 0
+loop_start:
+  mul t2, t0, s2
+  add t2, t2, t1
+  slli t2, t2, 2
+  add t2, t2, s4
 
-	# Epilogue
+  mv a0, s3
+  mv a1, t2
+  li a2, 4
 
+  addi sp, sp, -8
+  sw t0, 0(sp)
+  sw t1, 4(sp)
 
-	ret
+  call fread
+
+  lw t1, 4(sp)
+  lw t0, 0(sp)
+  addi sp, sp, 8
+
+  li t4, 4
+  bne t4, a0, Efread
+
+  addi t1, t1, 1
+  bne t1, s2, loop_start
+  addi t0, t0, 1
+  li t1, 0
+  bne t0, s1, loop_start
+
+  mv a0, s3
+  call fclose
+  bne x0, a0, Efclose
+
+  mv a0, s4
+
+  lw s4, 16(sp)
+  lw s3, 12(sp)
+  lw s2, 8(sp)
+  lw s1, 4(sp)
+  lw ra, 0(sp)
+  addi sp, sp, 20
+
+  ret
+Emalloc:
+  li a0, 26
+  j exit
+Efopen:
+  li a0, 27
+  j exit
+Efclose:
+  li a0, 28
+  j exit
+Efread:
+  li a0, 29
+  j exit

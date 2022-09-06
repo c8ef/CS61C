@@ -23,18 +23,72 @@
 #     this function terminates the program with error code 30
 # ==============================================================================
 write_matrix:
+  addi sp, sp, -24
+  sw ra, 0(sp)
+  sw s0, 4(sp)
+  sw s1, 8(sp)
+  sw s2, 12(sp)
+  sw s3, 16(sp)
+  sw s4, 20(sp)
 
-	# Prologue
+  mv s2, a2
+  mv s3, a3
+  mv s1, a1
 
+  li a1, 1
+  call fopen
+  blt a0, x0, Efopen
+  mv s0, a0
 
+  addi sp, sp, -8
+  sw s2, 0(sp)
+  sw s3, 4(sp)
+  mv s4, sp
 
+  mv a0, s0
+  mv a1, s4
+  li a2, 2
+  li a3, 4
+  call fwrite
+  li t1, 2
+  bne t1, a0, Efwrite
+  addi sp, sp, 8
 
+  mul t1, s2, s3
+  mv a0, s0
+  mv a1, s1
+  mv a2, t1
+  li a3, 4
 
+  addi sp, sp, -4
+  sw t1, 0(sp)
 
+  call fwrite
 
+  lw t1, 0(sp)
+  addi sp, sp, 4
 
+  bne t1, a0, Efwrite
 
-	# Epilogue
+  mv a0, s0
+  call fclose
+  bne a0, x0, Efclose
 
+  lw s4, 20(sp)
+  lw s3, 16(sp)
+  lw s2, 12(sp)
+  lw s1, 8(sp)
+  lw s0, 4(sp)
+  lw ra, 0(sp)
+  addi sp, sp, 24
 
-	ret
+  ret
+Efopen:
+  li a0, 27
+  j exit
+Efclose:
+  li a0, 28
+  j exit
+Efwrite:
+  li a0, 30
+  j exit

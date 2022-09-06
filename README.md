@@ -15,6 +15,6 @@
 ---
 
 - [x] proj1
-- [ ] proj2
+- [x] proj2
 - [ ] proj3
 - [ ] proj4
