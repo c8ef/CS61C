@@ -125,9 +125,13 @@ void deallocate_matrix(matrix *mat) {
 
   if (mat->parent)
     deallocate_matrix(mat->parent);
-
-  if (--mat->ref_cnt == 0) {
+  --mat->ref_cnt;
+  if (mat->ref_cnt == 0) {
     free(mat->data);
+    free(mat);
+    return;
+  } else if (mat->ref_cnt < 0) {
+    // this is for slices
     free(mat);
     return;
   }
@@ -169,6 +173,7 @@ int allocate_matrix_ref(matrix **mat, matrix *from, int offset, int rows,
   if (!ans)
     return -2;
 
+  ans->ref_cnt = 0;
   ans->data = from->data + offset;
   ans->cols = cols;
   ans->rows = rows;
@@ -306,5 +311,7 @@ int pow_matrix(matrix *result, matrix *mat, int pow) {
       set(result, i, j, get(tmp, i, j));
     }
   }
+  deallocate_matrix(tmp);
+  deallocate_matrix(tmp1);
   return 0;
 }
